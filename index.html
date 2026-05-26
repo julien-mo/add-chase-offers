@@ -26,26 +26,25 @@
 
   <a id="install" class="install" href="#">Add Chase Offers</a>
 
-  <div class="note">Click does nothing. <strong>Drag</strong> the green button onto your bookmarks bar to install.</div>
+  <div class="note"><strong>Drag</strong> the button onto your bookmarks bar to install.</div>
 
   <h2>Use</h2>
   <ol>
-    <li>Log into Chase, open your card's <strong>Offers</strong> page (the grid of tiles).</li>
-    <li>Click the bookmark.</li>
-    <li>Open DevTools Console. When it logs <code>added all!</code>, every available offer has been added.</li>
+    <li>Log into Chase and open the <a href="https://secure.chase.com/web/auth/dashboard#/dashboard/merchantOffers/offerCategoriesPage?offerCategoryName=ALL">Offers page</a> (the grid of tiles).</li>
+    <li>Click the bookmark. The page will bounce between each offer detail and the grid until every available offer has been added.</li>
   </ol>
 
   <p>Source: <a href="https://github.com/julien-mo/add-chase-offers">github.com/julien-mo/add-chase-offers</a></p>
 
-  <script type="text/plain" id="src">(async()=>{if(!window.__chaseOffersDedupe){window.__chaseOffersDedupe=1;const m=new Map(),d=k=>{const t=Date.now(),l=m.get(k);m.set(k,t);return l&&t-l<8000};const of=window.fetch;window.fetch=function(u,o){const M=o?.method||'';if(/^(POST|PUT|PATCH)$/i.test(M)){const k=(typeof u==='string'?u:u.url)+'|'+(o.body||'');if(d(k))return Promise.resolve(new Response('{}',{status:200}))}return of.apply(this,arguments)};const xo=XMLHttpRequest.prototype.open,xs=XMLHttpRequest.prototype.send;XMLHttpRequest.prototype.open=function(M,U){this._m=M;this._u=U;return xo.apply(this,arguments)};XMLHttpRequest.prototype.send=function(b){if(/^(POST|PUT|PATCH)$/i.test(this._m||'')&&d(this._u+'|'+(typeof b==='string'?b:'')))return;return xs.apply(this,arguments)}}const s=ms=>new Promise(r=>setTimeout(r,ms)),R=(a,b)=>Math.random()*(b-a)+a,D=new Set(),k=e=>e.querySelector('img')?.src||e.textContent.trim().slice(0,80);while(1){let t=[];for(let i=0;i<40&&!t.length;i++){t=[...document.querySelectorAll('.offerTileGridItemContainer')].filter(e=>!D.has(k(e)));if(!t.length)await s(250)}if(!t.length)return console.log('added all!');const b=t[0];D.add(k(b));b.childNodes[0].click();await s(R(700,1200));history.back();await s(R(400,800))}})();</script>
-
   <script>
-    const src = document.getElementById('src').textContent.trim();
-    document.getElementById('install').href = 'javascript:' + encodeURI(src);
-    document.getElementById('install').addEventListener('click', e => {
+    const install = document.getElementById('install');
+    install.addEventListener('click', e => {
       e.preventDefault();
       alert('Drag this button onto your bookmarks bar to install. Clicking it here does nothing.');
     });
+    fetch('bookmarklet.txt')
+      .then(r => r.text())
+      .then(src => { install.href = src.trim(); });
   </script>
 </body>
 </html>

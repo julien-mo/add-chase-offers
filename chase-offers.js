@@ -47,10 +47,7 @@
       tiles = [...document.querySelectorAll(TILE_SELECTOR)].filter(el => !done.has(keyOf(el)));
       if (!tiles.length) await sleep(250);
     }
-    if (!tiles.length) {
-      console.log('added all!');
-      return;
-    }
+    if (!tiles.length) return;
     const tile = tiles[0];
     done.add(keyOf(tile));
     tile.childNodes[0].click();
