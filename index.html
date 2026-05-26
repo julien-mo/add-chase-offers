@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Add Chase Offers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font: 16px/1.5 -apple-system, system-ui, sans-serif; max-width: 640px; margin: 3rem auto; padding: 0 1rem; color: #222; }
+    h1 { margin-bottom: .25rem; }
+    .sub { color: #666; margin-top: 0; }
+    .install {
+      display: inline-block; margin: 1.25rem 0;
+      padding: .65rem 1.1rem; border-radius: 8px;
+      background: #117a4d; color: #fff; text-decoration: none; font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    }
+    .install:hover { background: #0f6a43; }
+    ol { padding-left: 1.25rem; }
+    code { background: #f3f3f3; padding: 1px 5px; border-radius: 4px; }
+    .note { background: #fff7d6; border-left: 4px solid #e8c547; padding: .6rem .8rem; border-radius: 4px; margin: 1rem 0; }
+  </style>
+</head>
+<body>
+  <h1>Add Chase Offers</h1>
+  <p class="sub">Bookmarklet that walks the Chase Offers grid and adds every available offer.</p>
+
+  <a id="install" class="install" href="#">Add Chase Offers</a>
+
+  <div class="note">Click does nothing. <strong>Drag</strong> the green button onto your bookmarks bar to install.</div>
+
+  <h2>Use</h2>
+  <ol>
+    <li>Log into Chase, open your card's <strong>Offers</strong> page (the grid of tiles).</li>
+    <li>Click the bookmark.</li>
+    <li>Open DevTools Console. When it logs <code>added all!</code>, every available offer has been added.</li>
+  </ol>
+
+  <p>Source: <a href="https://github.com/julien-mo/add-chase-offers">github.com/julien-mo/add-chase-offers</a></p>
+
+  <script type="text/plain" id="src">(async()=>{if(!window.__chaseOffersDedupe){window.__chaseOffersDedupe=1;const m=new Map(),d=k=>{const t=Date.now(),l=m.get(k);m.set(k,t);return l&&t-l<8000};const of=window.fetch;window.fetch=function(u,o){const M=o?.method||'';if(/^(POST|PUT|PATCH)$/i.test(M)){const k=(typeof u==='string'?u:u.url)+'|'+(o.body||'');if(d(k))return Promise.resolve(new Response('{}',{status:200}))}return of.apply(this,arguments)};const xo=XMLHttpRequest.prototype.open,xs=XMLHttpRequest.prototype.send;XMLHttpRequest.prototype.open=function(M,U){this._m=M;this._u=U;return xo.apply(this,arguments)};XMLHttpRequest.prototype.send=function(b){if(/^(POST|PUT|PATCH)$/i.test(this._m||'')&&d(this._u+'|'+(typeof b==='string'?b:'')))return;return xs.apply(this,arguments)}}const s=ms=>new Promise(r=>setTimeout(r,ms)),R=(a,b)=>Math.random()*(b-a)+a,D=new Set(),k=e=>e.querySelector('img')?.src||e.textContent.trim().slice(0,80);while(1){let t=[];for(let i=0;i<40&&!t.length;i++){t=[...document.querySelectorAll('.offerTileGridItemContainer')].filter(e=>!D.has(k(e)));if(!t.length)await s(250)}if(!t.length)return console.log('added all!');const b=t[0];D.add(k(b));b.childNodes[0].click();await s(R(700,1200));history.back();await s(R(400,800))}})();</script>
+
+  <script>
+    const src = document.getElementById('src').textContent.trim();
+    document.getElementById('install').href = 'javascript:' + encodeURI(src);
+    document.getElementById('install').addEventListener('click', e => {
+      e.preventDefault();
+      alert('Drag this button onto your bookmarks bar to install. Clicking it here does nothing.');
+    });
+  </script>
+</body>
+</html>
